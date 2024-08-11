@@ -52,6 +52,12 @@ default.size.stdout \
 OBJDUMP_LIST += \
 Okachi.list \
 
+OBJCOPY_HEX += \
+Okachi.hex \
+
+OBJCOPY_BIN += \
+Okachi.bin \
+
 
 # All Target
 all: main-build
@@ -75,12 +81,22 @@ Okachi.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+Okachi.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "Okachi.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+Okachi.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Okachi.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) Okachi.elf Okachi.list Okachi.map default.size.stdout
+	-$(RM) Okachi.bin Okachi.elf Okachi.hex Okachi.list Okachi.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
