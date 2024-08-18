@@ -11,9 +11,10 @@
 #include<stdint.h>
 
 // ハードウェア依存のパラメータ
-const float hw_wheel_radius_mm = 24;
-const uint8_t hw_tread_mm = 72;
-const uint16_t hw_volatage_mv = 7400;
+const float 	HW_WHEEL_RADIUS_MM = 24;
+const uint8_t 	HW_TREAD_MM = 72;
+const uint16_t 	HW_VOLTAGE_MV = 7400;
+const float 	HW_STEP_DEGREE = 0.9f;
 
 /* 便利な定数群 */
 #define G					(9.80665f)					// 重量加速度[m/s^2]

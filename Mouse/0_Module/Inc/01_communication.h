@@ -10,7 +10,8 @@
 
 #include<stdint.h>
 
-uint8_t val;
+void Communication_Initialize(void);
+uint8_t Communication_TerminalRecev(void);
 
 
 

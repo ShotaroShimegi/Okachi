@@ -17,7 +17,6 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <01_communication.h>
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
@@ -95,6 +94,7 @@ int main(void)
   MX_TIM6_Init();
   MX_USART1_UART_Init();
   MX_TIM16_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */

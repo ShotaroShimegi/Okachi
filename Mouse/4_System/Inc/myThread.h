@@ -12,6 +12,7 @@
 
 // マウスにおける実質的な処理を司る
 // 原則はArduino関数っぽく分割
+
 void mySetup(void);
 void myloop(void);
 void myTimerCallback(void);

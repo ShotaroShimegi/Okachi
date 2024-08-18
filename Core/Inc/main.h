@@ -63,8 +63,8 @@ void Error_Handler(void);
 #define R_STEP_PWM_GPIO_Port GPIOA
 #define IR_LED_SET2_Pin GPIO_PIN_7
 #define IR_LED_SET2_GPIO_Port GPIOA
-#define IF_LED4_Pin GPIO_PIN_0
-#define IF_LED4_GPIO_Port GPIOB
+#define IF_LED3_Pin GPIO_PIN_0
+#define IF_LED3_GPIO_Port GPIOB
 #define IF_LED1_Pin GPIO_PIN_1
 #define IF_LED1_GPIO_Port GPIOB
 #define R_STEP_DIR_Pin GPIO_PIN_8
@@ -81,8 +81,8 @@ void Error_Handler(void);
 #define C_SW_GPIO_Port GPIOB
 #define IF_LED2_Pin GPIO_PIN_6
 #define IF_LED2_GPIO_Port GPIOB
-#define IF_LED3_Pin GPIO_PIN_7
-#define IF_LED3_GPIO_Port GPIOB
+#define MOTOR_EN_Pin GPIO_PIN_7
+#define MOTOR_EN_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
