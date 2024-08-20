@@ -17,12 +17,12 @@
 #define LEFT_CW()	HAL_GPIO_WritePin(L_STEP_DIR_GPIO_Port, L_STEP_DIR_Pin, SET)
 #define LEFT_CCW()	HAL_GPIO_WritePin(L_STEP_DIR_GPIO_Port, L_STEP_DIR_Pin, RESET)
 
-typedef struct{
+typedef struct step_motor{
 	int32_t sigma_pulse;
 	int32_t pulse_time_ms;
-	float velocity;
-	float target_velocity;
-	float accel_mmps;
+	float vel;
+	float target_vel;
+	float accel_mmpss;
 	float saved_pulse;
 }STEP_MOTOR;
 
@@ -32,7 +32,7 @@ void Stepper_Reset(void);
 uint32_t Stepper_GetRightDistance(void);
 uint32_t Stepper_GetLeftDistance(void);
 uint32_t Stepper_GetAngle(void);
-void Stepper_SetParameters(int32_t vel_r, int32_t vel_l,int32_t accel,int32_t distance,float angle);
+void Stepper_SetParameters(int32_t vel_l, int32_t vel_r,int32_t accel,int32_t distance,float angle);
 void Stepper_UpdateSensor(void);
 bool Stepper_UpdateRight(void);
 bool Stepper_UpdateLeft(void);

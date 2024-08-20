@@ -13,9 +13,21 @@ STEP_MOTOR Left;
 STEP_MOTOR Right;
 
 // 左右モータの共通パラメータ
-int32_t 	center_vel_mmps, center_dist_mm;
-float		center_angle_deg;
+int32_t 	center_vel_mmps, center_dist_mm,target_dist_mm;
+float		center_angle_deg,target_angle_deg;
 const float DISTANCE_MMPPULSE = HW_WHEEL_RADIUS_MM*HW_STEP_DEGREE/180*PI;
+
+STEP_MOTOR setParameter(int32_t _sigma_pulse, int32_t _time_ms,float _vel,float _target_vel,float _accel_mmps,float _saved_pulse){
+	STEP_MOTOR* temp;
+	temp->sigma_pulse = _sigma_pulse;
+	temp->pulse_time_ms = _time_ms;
+	temp->vel = _vel;
+	temp->target_vel = _target_vel;
+	temp->accel_mmpss = _accel_mmps;
+	temp->saved_pulse = _saved_pulse;
+
+	return *temp;
+}
 
 /* ---------------------------------------------------------------
 	ステッパの初期準備
@@ -25,6 +37,8 @@ void Stepper_Initialize(void){
 	center_vel_mmps = 0;
 	center_dist_mm = 0;
 	center_angle_deg = 0.0;
+	LEFT = setParameter(0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	RIGHT = setParameter(0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 /* ---------------------------------------------------------------
@@ -60,30 +74,16 @@ uint32_t Stepper_GetAngle(void){
 /* ---------------------------------------------------------------
 	走行パラメータの設定、走行開始直前に呼び出す想定
 --------------------------------------------------------------- */
-void Stepper_SetParameters(int32_t vel_r, int32_t vel_l,int32_t accel,int32_t distance,float angle){
+void Stepper_SetParameters(int32_t vel_l, int32_t vel_r,int32_t accel,int32_t distance,float angle){
 	// 回転方向の設定
 	if(vel_r > 0) RIGHT_CW();	else RIGHT_CCW();
 	if(vel_l > 0) LEFT_CCW();	else LEFT_CW();
 
 	// 単純なセッター
-	velocity_mmps = ABS(velocity);
-	accel_mmpss = accel;
-	radius_mm = radius;
-	distance_mm = distance;
-	angle_deg = angle;
-	fix_omega_radps = fix_omega;
-
-	// 引数から計算するセッター、スラローム想定用
-	if(veloity == 0){		// 超信地旋回指令の場合、上書きなど
-		omega_radps = (float)300.0f/radius;
-		omega_accel_radpss = (float)500.0f/radius;
-	}else if(radius > 0){	// スラローム走行指令
-		omega_radps = (float)velocity_mmps / radius;
-		omega_accel_radpss = (float)accel_mmps /radius;
-	}else{					// 直線・後退走行
-		omega_radps = 0.0f;
-		omega_accel_radpss = 0.0f;
-	}
+	LEFT.target_vel = vel_l,LEFT.accel_mmpss = ABS(accel);
+	RIGHT.target_vel = vel_r, RIGHT.accel_mmpss = ABS(accel);
+	target_dist_mm = distance;
+	target_angle_deg = angle;
 
 	// パラメータセッティング中の記録を保存
 	start_pulse_l = sigma_pulse_l;
@@ -104,38 +104,51 @@ bool Stepper_UpdateRight(void){
 	sigma_pulse_r++;
 
 	// 走行条件を確認し、速度更新するか確認, 非常停止によるPWM停止
-	if(ABS(distance_center) > 1.2f*ABS(distance_mm)){
-		HAL_TIM_PWM_Start_IT(&htim2, 2);
+	if(ABS(distance_center) > 1.2f*ABS(target_distance_mm)){
+		HAL_TIM_PWM_Stop_IT(&htim2, 2);
 		return 1;
 	}
-	else if(ABS(angle_center) > 1.2f*ABS(angle)){
-		HAL_TIM_PWM_Start_IT(&htim2, 2);
+	else if(ABS(angle_center) > 1.2f*ABS(target_angle_deg)){
+		HAL_TIM_PWM_Stop_IT(&htim2, 2);
 		return 2;
 	}
 
 	// 周期時間を格納
-	time_pulse_r_ms = DISTANCE_MMPPULSE / velocity_r * 1000;
-	velocity_r = velocity_mmps + omega_radps*HW_TREAD_MM*0.5f;
-			accel_mmpss*time_pulse_r_ms + omega_accel_radpss*time_pulse_r_ms;
-
-
-	// 次回の速度を算出
+	RIGHT.pulse_time_ms = DISTANCE_MMPPULSE / RIGHT.vel_r*1000;
+	if(RIGHT.vel < RIGHT.target_vel)		RIGHT.vel += RIGHT.accel_mmpss*RIGHT.pulse_time_ms*0.001f;
+	else if(RIGHT.target_vel < RIGHT.vel)	RIGHT.vel -= RIGHT.accel_mmpss*RIGHT.pulse_time_ms*0.001f;
+	else 									RIGHT.vel = RIGHT.vel;
 
 	// 割り込み関連の設定を反映
-
-	//
+	__HAL_TIM_SET_AUTORELOAD(&htim2,(uint16_t)(DISTANCE_MMPPULSE/RIGHT.vel*1000000));
+	__HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_2,(uint16_t)(DISTANCE_MMPPULSE/RIGHT.vel*500000));
+	HAL_TIM_PWM_Start_IT(&htim2, 2);
 
 	return 0;
 }
 
 bool Stepper_UpdateLeft(void){
 	sigma_pulse_l++;
-	int32_t diff_pulse_r = sigma_pulse_r - start_pulse_r;
-	int32_t diff_pulse_l = sigma_pulse_l - start_pulse_l;
+	// 走行条件を確認し、速度更新するか確認, 非常停止によるPWM停止
+	if(ABS(distance_center) > 1.2f*ABS(target_distance_mm)){
+		HAL_TIM_PWM_Stop_IT(&htim16, 1);
+		return 1;
+	}
+	else if(ABS(angle_center) > 1.2f*ABS(target_angle_deg)){
+		HAL_TIM_PWM_Stop_IT(&htim16, 1);
+		return 2;
+	}
 
-	float distance_center = (diff_pulse_r + diff_pulse_l)*DISTANCE_MMPPULSE*0.50f;
-	float angle_ceter = RAD2DEG((diff_pulse_r - diff_pulse_l)*DISTANCE_MMPPULSE/HW_TREAD_MM);
+	// 周期時間を格納
+	LEFT.pulse_time_ms = DISTANCE_MMPPULSE / LEFT.vel_r*1000;
+	if(LEFT.vel < LEFT.target_vel)		LEFT.vel += LEFT.accel_mmpss*LEFT.pulse_time_ms*0.001f;
+	else if(LEFT.target_vel < LEFT.vel)	LEFT.vel -= LEFT.accel_mmpss*LEFT.pulse_time_ms*0.001f;
+	else 								LEFT.vel = LEFT.vel;
 
+	// 割り込み関連の設定を反映
+	__HAL_TIM_SET_AUTORELOAD(&htim16,(uint16_t)(DISTANCE_MMPPULSE/RIGHT.vel*1000000));
+	__HAL_TIM_SET_COMPARE(&htim16,TIM_CHANNEL_1,(uint16_t)(DISTANCE_MMPPULSE/RIGHT.vel*500000));
+	HAL_TIM_PWM_Start_IT(&htim16, 1);
 
 	return 0;
 }
