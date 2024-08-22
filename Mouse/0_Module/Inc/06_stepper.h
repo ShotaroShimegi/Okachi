@@ -31,7 +31,7 @@ void Stepper_Initialize(void);
 void Stepper_Reset(void);
 uint32_t Stepper_GetRightDistance(void);
 uint32_t Stepper_GetLeftDistance(void);
-uint32_t Stepper_GetAngle(void);
+float Stepper_GetAngle(void);
 void Stepper_SetParameters(int32_t vel_l, int32_t vel_r,int32_t accel,int32_t distance,float angle);
 void Stepper_UpdateSensor(void);
 bool Stepper_UpdateRight(void);
