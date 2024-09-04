@@ -20,8 +20,8 @@ void Sensor_LED_ON(uint8_t set_num){
 	センサLEDを系列ごとにOFFにする
 --------------------------------------------------------------- */
 void Sensor_LED_OFF(uint8_t set_num){
-	if(set_num == SENSOR_LIGHT_SET1)		HAL_GPIO_WritePin(IR_LED_SET1_GPIO_Port, IR_LED_SET1_Pin, RESET);
-	else if(set_num == SENSOR_LIGHT_SET2)	HAL_GPIO_WritePin(IR_LED_SET2_GPIO_Port, IR_LED_SET2_Pin, RESET);
+	if(set_num == SENSOR_LIGHT_1)		HAL_GPIO_WritePin(IR_LED_SET1_GPIO_Port, IR_LED_SET1_Pin, RESET);
+	else if(set_num == SENSOR_LIGHT_2)	HAL_GPIO_WritePin(IR_LED_SET2_GPIO_Port, IR_LED_SET2_Pin, RESET);
 }
 
 /* ---------------------------------------------------------------
@@ -32,7 +32,7 @@ uint16_t Sensor_GetADC(uint8_t ch){
 
 	  sConfig.Channel = ch;
 	  sConfig.Rank = 1;
-	  sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_12CYCLES_5;
 
 	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 

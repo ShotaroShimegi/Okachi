@@ -4,6 +4,8 @@
  *  Created on: Aug 12, 2024
  *      Author: sssho
  */
+#include "adc.h"
+
 #include "04_battery.h"
 
 /* ---------------------------------------------------------------
@@ -14,13 +16,13 @@ uint16_t Battery_GetVoltage(){
 
   sConfig.Channel = 7;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+  sConfig.SamplingTime = ADC_SAMPLETIME_12CYCLES_5;
 
-  HAL_ADC_ConfigChannel(hadc1, &sConfig);
+  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
-  HAL_ADC_Start(hadc1);
-  HAL_ADC_PollForConversion(hadc1, 100);
-  uint32_t adc_raw_value = HAL_ADC_GetValue(hadc1);
+  HAL_ADC_Start(&hadc1);
+  HAL_ADC_PollForConversion(&hadc1, 100);
+  uint32_t adc_raw_value = HAL_ADC_GetValue(&hadc1);
 
   return adc_raw_value*VOLTAGE_RATIO/MAX_ADC_VALUE;
 }

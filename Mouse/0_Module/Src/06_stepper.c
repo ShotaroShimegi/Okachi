@@ -104,33 +104,30 @@ void Stepper_UpdateSensor(){
 	center_vel_mmps = (Right.vel + Left.vel)*0.50f;
 	center_angle_rad = (diff_pulse_r - diff_pulse_l)*DISTANCE_MMPPULSE/HW_TREAD_MM;
 	center_angle_deg = RAD2DEG(center_angle_rad);
-
-
-	return 0;
 }
 
 bool Stepper_UpdateRight(void){
 	Right.sigma_pulse++;
 
 	// 走行条件を確認し、速度更新するか確認, 非常停止によるPWM停止
-	if(ABS(distance_center) > 1.2f*ABS(target_distance_mm)){
+	if(ABS(center_dist_mm) > 1.2f*ABS(target_dist_mm)){
 		HAL_TIM_PWM_Stop_IT(&htim2, 2);
 		return 1;
 	}
-	else if(ABS(angle_center) > 1.2f*ABS(target_angle_deg)){
+	else if(ABS(center_angle_deg) > 1.2f*ABS(target_angle_deg)){
 		HAL_TIM_PWM_Stop_IT(&htim2, 2);
 		return 2;
 	}
 
 	// 周期時間を格納
-	RIGHT.pulse_time_ms = DISTANCE_MMPPULSE / RIGHT.vel_r*1000;
-	if(RIGHT.vel < RIGHT.target_vel)		RIGHT.vel += RIGHT.accel_mmpss*RIGHT.pulse_time_ms*0.001f;
-	else if(RIGHT.target_vel < RIGHT.vel)	RIGHT.vel -= RIGHT.accel_mmpss*RIGHT.pulse_time_ms*0.001f;
-	else 									RIGHT.vel = RIGHT.vel;
+	Right.pulse_time_ms = DISTANCE_MMPPULSE / Right.vel*1000;
+	if(Right.vel < Right.target_vel)		Right.vel += Right.accel_mmpss*Right.pulse_time_ms*0.001f;
+	else if(Right.target_vel < Right.vel)	Right.vel -= Right.accel_mmpss*Right.pulse_time_ms*0.001f;
+	else 									Right.vel = Right.vel;
 
 	// 割り込み関連の設定を反映
-	__HAL_TIM_SET_AUTORELOAD(&htim2,(uint16_t)(DISTANCE_MMPPULSE/RIGHT.vel*1000000));
-	__HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_2,(uint16_t)(DISTANCE_MMPPULSE/RIGHT.vel*500000));
+	__HAL_TIM_SET_AUTORELOAD(&htim2,(uint16_t)(DISTANCE_MMPPULSE/Right.vel*1000000));
+	__HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_2,(uint16_t)(DISTANCE_MMPPULSE/Right.vel*500000));
 	HAL_TIM_PWM_Start_IT(&htim2, 2);
 
 	return 0;
@@ -139,24 +136,24 @@ bool Stepper_UpdateRight(void){
 bool Stepper_UpdateLeft(void){
 	Left.sigma_pulse++;
 	// 走行条件を確認し、速度更新するか確認, 非常停止によるPWM停止
-	if(ABS(distance_center) > 1.2f*ABS(target_distance_mm)){
+	if(ABS(center_dist_mm) > 1.2f*ABS(target_dist_mm)){
 		HAL_TIM_PWM_Stop_IT(&htim16, 1);
 		return 1;
 	}
-	else if(ABS(angle_center) > 1.2f*ABS(target_angle_deg)){
+	else if(ABS(center_angle_deg) > 1.2f*ABS(target_angle_deg)){
 		HAL_TIM_PWM_Stop_IT(&htim16, 1);
 		return 2;
 	}
 
 	// 周期時間を格納
-	LEFT.pulse_time_ms = DISTANCE_MMPPULSE / LEFT.vel_r*1000;
-	if(LEFT.vel < LEFT.target_vel)		LEFT.vel += LEFT.accel_mmpss*LEFT.pulse_time_ms*0.001f;
-	else if(LEFT.target_vel < LEFT.vel)	LEFT.vel -= LEFT.accel_mmpss*LEFT.pulse_time_ms*0.001f;
-	else 								LEFT.vel = LEFT.vel;
+	Left.pulse_time_ms = DISTANCE_MMPPULSE / Left.vel*1000;
+	if(Left.vel < Left.target_vel)		Left.vel += Left.accel_mmpss*Left.pulse_time_ms*0.001f;
+	else if(Left.target_vel < Left.vel)	Left.vel -= Left.accel_mmpss*Left.pulse_time_ms*0.001f;
+	else 								Left.vel = Left.vel;
 
 	// 割り込み関連の設定を反映
-	__HAL_TIM_SET_AUTORELOAD(&htim16,(uint16_t)(DISTANCE_MMPPULSE/RIGHT.vel*1000000));
-	__HAL_TIM_SET_COMPARE(&htim16,TIM_CHANNEL_1,(uint16_t)(DISTANCE_MMPPULSE/RIGHT.vel*500000));
+	__HAL_TIM_SET_AUTORELOAD(&htim16,(uint16_t)(DISTANCE_MMPPULSE/Left.vel*1000000));
+	__HAL_TIM_SET_COMPARE(&htim16,TIM_CHANNEL_1,(uint16_t)(DISTANCE_MMPPULSE/Left.vel*500000));
 	HAL_TIM_PWM_Start_IT(&htim16, 1);
 
 	return 0;

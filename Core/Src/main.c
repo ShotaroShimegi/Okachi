@@ -26,8 +26,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "41_myThread.h"
 /* USER CODE END Includes */
-#include "06_stepper.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
@@ -96,7 +97,7 @@ int main(void)
   MX_TIM16_Init();
   MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
-
+  mySetup();
   /* USER CODE END 2 */
 
   /* Infinite loop */
