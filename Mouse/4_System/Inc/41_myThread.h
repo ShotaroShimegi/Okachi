@@ -18,7 +18,7 @@ void myloop(void);
 void myTimerCallback(void);
 void myPWMCallback(uint8_t ch);
 
-#define RIGHT_PWM_TIM	1
+#define RIGHT_PWM_TIM	16
 #define LEFT_PWM_TIM 	2
 
 

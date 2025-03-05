@@ -87,7 +87,7 @@ void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Channel = ADC_CHANNEL_10;
   sConfig.Rank = ADC_REGULAR_RANK_3;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -151,12 +151,12 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     /**ADC1 GPIO Configuration
     PA0     ------> ADC1_IN5
     PA1     ------> ADC1_IN6
-    PA2     ------> ADC1_IN7
     PA3     ------> ADC1_IN8
     PA4     ------> ADC1_IN9
+    PA5     ------> ADC1_IN10
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4;
+    GPIO_InitStruct.Pin = IR_SEN_FL_Pin|IR_SE_R_Pin|IR_SEN_L_Pin|IR_SEN_FR_Pin
+                          |BATTERY_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -199,12 +199,12 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
     /**ADC1 GPIO Configuration
     PA0     ------> ADC1_IN5
     PA1     ------> ADC1_IN6
-    PA2     ------> ADC1_IN7
     PA3     ------> ADC1_IN8
     PA4     ------> ADC1_IN9
+    PA5     ------> ADC1_IN10
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4);
+    HAL_GPIO_DeInit(GPIOA, IR_SEN_FL_Pin|IR_SE_R_Pin|IR_SEN_L_Pin|IR_SEN_FR_Pin
+                          |BATTERY_Pin);
 
     /* ADC1 DMA DeInit */
     HAL_DMA_DeInit(adcHandle->DMA_Handle);

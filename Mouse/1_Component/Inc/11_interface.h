@@ -11,7 +11,7 @@
 #include<stdint.h>
 
 uint8_t IF_selectMode();
-void IF_setBlinkParameters(uint8_t command,uint8_t time_ms);
+void IF_setBlinkParameters(uint8_t command,uint16_t time_ms);
 void IF_checkBlinking();
 
 
