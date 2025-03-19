@@ -26,6 +26,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+#include "01_communication.h"
+
 #include "41_myThread.h"
 /* USER CODE END Includes */
 
@@ -58,7 +61,35 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+/* ---------------------------------------------------------------
+	printfを使用するための設定
+--------------------------------------------------------------- */
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+PUTCHAR_PROTOTYPE
+{
+	if(ch == '\n'){
+		uint8_t _ch = '\r';
+		HAL_UART_Transmit(&huart1, &_ch, 1, 1);
+	}
+	HAL_UART_Transmit(&huart1, &ch, 1, 1);
+	return 1;
+}
 
+/* ---------------------------------------------------------------
+	scanfを使用するための設定
+--------------------------------------------------------------- */
+#ifdef __GNUC__
+#define GETCHAR_PROTOTYPE int __io_getchar(void)
+#else
+#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
+#endif /* __GNUC__ */
+GETCHAR_PROTOTYPE {
+	return Communication_TerminalRecev();
+}
 /* USER CODE END 0 */
 
 /**
@@ -93,9 +124,9 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM2_Init();
   MX_TIM6_Init();
-  MX_USART1_UART_Init();
   MX_TIM16_Init();
   MX_TIM7_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   mySetup();
   /* USER CODE END 2 */
@@ -104,6 +135,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  myloop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -127,10 +159,16 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
+  /** Configure LSE Drive Capability
+  */
+  HAL_PWR_EnableBkUpAccess();
+  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
+
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE|RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
@@ -159,6 +197,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
+  /** Enable MSI Auto calibration
+  */
+  HAL_RCCEx_EnableMSIPLLMode();
 }
 
 /* USER CODE BEGIN 4 */

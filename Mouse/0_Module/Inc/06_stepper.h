@@ -12,10 +12,10 @@
 #include <stdbool.h>
 #include "main.h"
 
-#define RIGHT_CW()	HAL_GPIO_WritePin(R_STEP_DIR_GPIO_Port, R_STEP_DIR_Pin, SET)
-#define RIGHT_CCW()	HAL_GPIO_WritePin(R_STEP_DIR_GPIO_Port, R_STEP_DIR_Pin, RESET)
-#define LEFT_CW()	HAL_GPIO_WritePin(L_STEP_DIR_GPIO_Port, L_STEP_DIR_Pin, SET)
-#define LEFT_CCW()	HAL_GPIO_WritePin(L_STEP_DIR_GPIO_Port, L_STEP_DIR_Pin, RESET)
+#define RIGHT_CW()	HAL_GPIO_WritePin(MOTOR_R_DIR_GPIO_Port, MOTOR_R_DIR_Pin, 	SET)
+#define RIGHT_CCW()	HAL_GPIO_WritePin(MOTOR_R_DIR_GPIO_Port, MOTOR_R_DIR_Pin, RESET)
+#define LEFT_CW()	HAL_GPIO_WritePin(MOTOR_L_DIR_GPIO_Port, MOTOR_L_DIR_Pin,	SET)
+#define LEFT_CCW()	HAL_GPIO_WritePin(MOTOR_L_DIR_GPIO_Port, MOTOR_L_DIR_Pin, RESET)
 
 typedef struct step_motor{
 	int32_t sigma_pulse;
