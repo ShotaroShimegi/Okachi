@@ -10,9 +10,9 @@
 
 #include <stdint.h>
 
-void Clock_Wait_Ms(uint16_t);
-void Clock_Micro_Ms(uint16_t);
-void Clock_InteruptStart();
-void Clock_InteruptStop();
+void Clock_WaitMs(uint16_t);
+void Clock_MicroMs(uint16_t);
+void Clock_StartInterupt();
+void Clock_StopInterupt();
 
 #endif /* MOUSE_0_MODULE_INC_08_CLOCK_H_ */

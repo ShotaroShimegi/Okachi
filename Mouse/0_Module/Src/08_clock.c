@@ -10,14 +10,14 @@
 /* ---------------------------------------------------------------
 	msWait関数（HALだとラッパー）
 --------------------------------------------------------------- */
-void Clock_Wait_Ms(uint16_t ms){
+void Clock_WaitMs(uint16_t ms){
 	HAL_Delay(ms);
 }
 
 /* ---------------------------------------------------------------
 	usWait関数
 --------------------------------------------------------------- */
-void Clock_Micro_Ms(uint16_t us){
+void Clock_MicroMs(uint16_t us){
 	uint16_t delay = __HAL_TIM_GET_COUNTER(&htim7) + us;
 	HAL_TIM_Base_Start(&htim7);
 	while(__HAL_TIM_GET_COUNTER(&htim7) < delay);
@@ -28,7 +28,7 @@ void Clock_Micro_Ms(uint16_t us){
 /* ---------------------------------------------------------------
 	タイマ割込み開始の処理
 --------------------------------------------------------------- */
-void Clock_InteruptStart(){
+void Clock_StartInterupt(){
 	TIM6->CNT = 0;
 	HAL_TIM_Base_Start_IT(&htim6);
 }
@@ -36,7 +36,7 @@ void Clock_InteruptStart(){
 /* ---------------------------------------------------------------
 	タイマ割込み終了の処理
 --------------------------------------------------------------- */
-void Clock_InteruptStop(){
+void Clock_StopInterupt(){
 	HAL_TIM_Base_Stop_IT(&htim6);
 	TIM6->CNT = 0;
 }

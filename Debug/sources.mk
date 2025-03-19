@@ -27,4 +27,7 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32L4xx_HAL_Driver/Src \
+Mouse/0_Module/Src \
+Mouse/1_Component/Src \
+Mouse/4_System/Src \
 

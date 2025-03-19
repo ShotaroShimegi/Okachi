@@ -5,6 +5,10 @@
  *      Author: sssho
  */
 #include <stdio.h>
+
+#include "tim.h"
+#include "usart.h"
+
 #include "01_communication.h"
 
 /* ---------------------------------------------------------------
@@ -50,5 +54,5 @@ PUTCHAR_PROTOTYPE
 #define GETCHAR_PROTOTYPE int fgetc(FILE *f)
 #endif /* __GNUC__ */
 GETCHAR_PROTOTYPE {
-	return Communicate_TerminalRecv();
+	return Communication_TerminalRecev();
 }

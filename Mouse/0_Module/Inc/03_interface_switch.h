@@ -11,8 +11,8 @@
 #include<stdbool.h>
 
 /* Tact SWithc関連の関数（チャタリング処理）*/
-bool IF_SW_Get_Right_Switch();
-bool IF_SW_Get_Center_Switch();
-bool IF_SW_Get_Left_Switch();
+bool IF_SW_GetRightSwitch();
+bool IF_SW_GetCenterSwitch();
+bool IF_SW_GetLeftSwitch();
 
 #endif /* MOUSE_MODULE_INC_INTERFACE_SWITCH_H_ */
