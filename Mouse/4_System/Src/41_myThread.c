@@ -40,8 +40,6 @@ void mySetup(void){
 
 void myloop(void){
 	while(1){
-<<<<<<< HEAD
-
 	// GPIO Test　（スイッチに対応したピンが光る）
 //		if(!IF_SW_GetRightSwitch())	HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,RESET);
 //		else						HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,SET);
@@ -53,15 +51,7 @@ void myloop(void){
 	// printfで変数表示
 		printf("count is %6d",timer_count);
 		Clock_WaitMs(1000);
-=======
-		if(!IF_SW_GetRightSwitch())	HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,RESET);
-		else						HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,SET);
-		if(!IF_SW_GetCenterSwitch())HAL_GPIO_WritePin(IF_LED2_GPIO_Port,IF_LED2_Pin,RESET);
-		else						HAL_GPIO_WritePin(IF_LED2_GPIO_Port,IF_LED2_Pin,SET);
-		if(!IF_SW_GetLeftSwitch())	HAL_GPIO_WritePin(IF_LED1_GPIO_Port,IF_LED1_Pin,RESET);
-		else						HAL_GPIO_WritePin(IF_LED1_GPIO_Port,IF_LED1_Pin,SET);
-		Clock_WaitMs(100);
->>>>>>> origin/main
+
 	}
 }
 
