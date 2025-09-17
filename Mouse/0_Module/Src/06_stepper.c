@@ -109,7 +109,7 @@ void Stepper_UpdateSensor(){
 bool Stepper_UpdateRight(void){
 	Right.sigma_pulse++;
 
-	// 走行条件を確認し、速度更新するか確認, 非常停止によるPWM停止
+	// 走行条件を確認し、速度更新するか確認,大幅に超過している場合 非常停止によるPWM停止
 	if(ABS(center_dist_mm) > 1.2f*ABS(target_dist_mm)){
 		HAL_TIM_PWM_Stop_IT(&htim2, 2);
 		return 1;

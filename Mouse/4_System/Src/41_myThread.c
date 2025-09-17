@@ -38,7 +38,6 @@ void mySetup(void){
 
 void myloop(void){
 	while(1){
-
 		if(!IF_SW_GetRightSwitch())	HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,RESET);
 		else						HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,SET);
 		if(!IF_SW_GetCenterSwitch())HAL_GPIO_WritePin(IF_LED2_GPIO_Port,IF_LED2_Pin,RESET);
