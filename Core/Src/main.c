@@ -73,9 +73,9 @@ PUTCHAR_PROTOTYPE
 {
 	if(ch == '\n'){
 		uint8_t _ch = '\r';
-		HAL_UART_Transmit(&huart1, &_ch, 1, 1);
+		HAL_UART_Transmit(&huart2, &_ch, 1, 1);
 	}
-	HAL_UART_Transmit(&huart1, &ch, 1, 1);
+	HAL_UART_Transmit(&huart2, &ch, 1, 1);
 	return 1;
 }
 

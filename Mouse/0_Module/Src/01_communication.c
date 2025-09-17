@@ -23,6 +23,6 @@ void Communication_Initialize(void){
 --------------------------------------------------------------- */
 uint8_t Communication_TerminalRecev(void){
 	uint8_t data[1];
-	HAL_UART_Receive( &huart1, (uint8_t*)data, sizeof(data), 1 );
+	HAL_UART_Receive( &huart2, (uint8_t*)data, sizeof(data), 1 );
 	return (*data);
 }

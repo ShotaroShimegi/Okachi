@@ -17,6 +17,7 @@
 
 #include "41_myThread.h"
 
+uint16_t timer_count = 0;
 
 void mySetup(void){
 	// 初期駆動
@@ -26,31 +27,37 @@ void mySetup(void){
 		HAL_GPIO_WritePin(IF_LED1_GPIO_Port, IF_LED1_Pin,RESET);
 		HAL_GPIO_WritePin(IF_LED2_GPIO_Port, IF_LED2_Pin,RESET);
 		HAL_GPIO_WritePin(IF_LED3_GPIO_Port, IF_LED3_Pin,RESET);
-		HAL_Delay(500);
+		HAL_Delay(250);
 		HAL_GPIO_WritePin(IF_LED1_GPIO_Port, IF_LED1_Pin,SET);
 		HAL_GPIO_WritePin(IF_LED2_GPIO_Port, IF_LED2_Pin,SET);
 		HAL_GPIO_WritePin(IF_LED3_GPIO_Port, IF_LED3_Pin,SET);
-		HAL_Delay(500);
+		HAL_Delay(250);
 	}
 	IF_selectMode();
+	Clock_StartInterupt();
 
 }
 
 void myloop(void){
 	while(1){
 
-		if(!IF_SW_GetRightSwitch())	HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,RESET);
-		else						HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,SET);
-		if(!IF_SW_GetCenterSwitch())HAL_GPIO_WritePin(IF_LED2_GPIO_Port,IF_LED2_Pin,RESET);
-		else						HAL_GPIO_WritePin(IF_LED2_GPIO_Port,IF_LED2_Pin,SET);
-		if(!IF_SW_GetLeftSwitch())	HAL_GPIO_WritePin(IF_LED1_GPIO_Port,IF_LED1_Pin,RESET);
-		else						HAL_GPIO_WritePin(IF_LED1_GPIO_Port,IF_LED1_Pin,SET);
-		Clock_WaitMs(100);
+	// GPIO Test　（スイッチに対応したピンが光る）
+//		if(!IF_SW_GetRightSwitch())	HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,RESET);
+//		else						HAL_GPIO_WritePin(IF_LED3_GPIO_Port,IF_LED3_Pin,SET);
+//		if(!IF_SW_GetCenterSwitch())HAL_GPIO_WritePin(IF_LED2_GPIO_Port,IF_LED2_Pin,RESET);
+//		else						HAL_GPIO_WritePin(IF_LED2_GPIO_Port,IF_LED2_Pin,SET);
+//		if(!IF_SW_GetLeftSwitch())	HAL_GPIO_WritePin(IF_LED1_GPIO_Port,IF_LED1_Pin,RESET);
+//		else						HAL_GPIO_WritePin(IF_LED1_GPIO_Port,IF_LED1_Pin,SET);
+
+	// printfで変数表示
+		printf("count is %6d",timer_count);
+		Clock_WaitMs(1000);
 	}
 }
 
 void myTimerCallback(void){
 	// 1kHzタイマ割り込み
+	timer_count++;
 }
 
 void myPWMCallback(uint8_t ch){
